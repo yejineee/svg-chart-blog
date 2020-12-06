@@ -140,11 +140,29 @@ const LineChart = ({
     });
   };
 
+  const LabelYUnit = () => {
+    const x = FONT_SIZE;
+    const y = padding - FONT_SIZE;
+    return (
+      <text
+        x={x}
+        y={y}
+        style={{
+          fill: "#808080",
+          fontSize: FONT_SIZE,
+          fontFamily: "Helvetica",
+        }}
+      >
+        (만원)
+      </text>
+    );
+  };
   return (
     <svg
       viewBox={`0 0 ${width} ${height}`}
       //style={{ border: "0.5px solid #ccc" }}
     >
+      <LabelYUnit />
       <XAxis />
       <LabelsXAxis />
       <YAxis />
