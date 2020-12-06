@@ -21,12 +21,13 @@ const LineChart = ({
   const padding = (FONT_SIZE + digits) * 3;
   const chartWidth = width - padding * 2;
   const chartHeight = height - padding * 2;
-
+  const getXpos = (ratio, chartWidth, padding) => ratio * chartWidth + padding;
+  const getYpos = (ratio, chartHeight, padding) =>
+    chartHeight - ratio * chartHeight + padding;
   const points = data
     .map((element) => {
-      const x = (element.x / maximumXFromData) * chartWidth + padding;
-      const y =
-        chartHeight - (element.y / maximumYFromData) * chartHeight + padding;
+      const x = getXpos(element.x / maximumXFromData, chartWidth, padding);
+      const y = getYpos(element.y / maximumYFromData, chartHeight, padding);
       return `${x},${y}`;
     })
     .join(" ");
@@ -56,7 +57,7 @@ const LineChart = ({
     return new Array(guideCount).fill(0).map((_, index) => {
       const ratio = (index + 1) / guideCount;
 
-      const xCoordinate = padding + chartWidth * ratio;
+      const xCoordinate = getXpos(ratio, chartWidth, padding);
 
       return (
         <React.Fragment key={index}>
@@ -78,7 +79,7 @@ const LineChart = ({
     return new Array(numberOfHorizontalGuides).fill(0).map((_, index) => {
       const ratio = (index + 1) / numberOfHorizontalGuides;
 
-      const yCoordinate = padding + (chartHeight - chartHeight * ratio);
+      const yCoordinate = getYpos(ratio, chartHeight, padding);
 
       return (
         <React.Fragment key={index}>
@@ -97,7 +98,7 @@ const LineChart = ({
     const y = height - padding + FONT_SIZE * 2;
     return data.map((element, index) => {
       const ratio = element.x / maximumXFromData;
-      const x = ratio * chartWidth + padding - FONT_SIZE;
+      const x = getXpos(ratio, chartWidth, padding) - FONT_SIZE;
       return (
         <text
           key={index}
@@ -121,8 +122,7 @@ const LineChart = ({
       const x = FONT_SIZE;
       const ratio = index / numberOfHorizontalGuides;
 
-      const yCoordinate =
-        chartHeight - ratio * chartHeight + padding + FONT_SIZE / 2;
+      const yCoordinate = getYpos(ratio, chartHeight, padding) + FONT_SIZE / 2;
       return (
         <text
           key={index}
