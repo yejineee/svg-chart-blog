@@ -12,7 +12,7 @@ const LineChart = ({
   precision,
 }) => {
   const FONT_SIZE = width / 50;
-  const maximumXFromData = Math.max(...data.map((e) => e.x));
+  const maximumXFromData = data.length;
   const maximumYFromData = Math.max(...data.map((e) => e.y));
 
   const digits =
@@ -25,8 +25,8 @@ const LineChart = ({
   const getYpos = (ratio, chartHeight, padding) =>
     chartHeight - ratio * chartHeight + padding;
   const points = data
-    .map((element) => {
-      const x = getXpos(element.x / maximumXFromData, chartWidth, padding);
+    .map((element, index) => {
+      const x = getXpos(index / maximumXFromData, chartWidth, padding);
       const y = getYpos(element.y / maximumYFromData, chartHeight, padding);
       return `${x},${y}`;
     })
@@ -38,7 +38,7 @@ const LineChart = ({
 
   const XAxis = () => (
     <Axis
-      points={`${padding},${height - padding} ${width - padding},${
+      points={`${padding},${height - padding} ${chartWidth},${
         height - padding
       }`}
     />
@@ -74,7 +74,7 @@ const LineChart = ({
 
   const HorizontalGuides = () => {
     const startX = padding;
-    const endX = width - padding;
+    const endX = chartWidth;
 
     return new Array(numberOfHorizontalGuides).fill(0).map((_, index) => {
       const ratio = (index + 1) / numberOfHorizontalGuides;
@@ -97,7 +97,7 @@ const LineChart = ({
   const LabelsXAxis = () => {
     const y = height - padding + FONT_SIZE * 2;
     return data.map((element, index) => {
-      const ratio = element.x / maximumXFromData;
+      const ratio = index / maximumXFromData;
       const x = getXpos(ratio, chartWidth, padding) - FONT_SIZE;
       return (
         <text
@@ -167,7 +167,7 @@ const LineChart = ({
       <LabelsXAxis />
       <YAxis />
       <LabelsYAxis />
-      {numberOfVerticalGuides && <VerticalGuides />}
+      {/* {numberOfVerticalGuides && <VerticalGuides />} */}
       <HorizontalGuides />
 
       <polyline
