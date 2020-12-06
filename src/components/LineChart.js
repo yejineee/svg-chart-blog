@@ -9,11 +9,11 @@ const LineChart = ({
   width,
   horizontalGuides: numberOfHorizontalGuides,
   verticalGuides: numberOfVerticalGuides,
-  precision
+  precision,
 }) => {
   const FONT_SIZE = width / 50;
-  const maximumXFromData = Math.max(...data.map(e => e.x));
-  const maximumYFromData = Math.max(...data.map(e => e.y));
+  const maximumXFromData = Math.max(...data.map((e) => e.x));
+  const maximumYFromData = Math.max(...data.map((e) => e.y));
 
   const digits =
     parseFloat(maximumYFromData.toString()).toFixed(precision).length + 1;
@@ -23,7 +23,7 @@ const LineChart = ({
   const chartHeight = height - padding * 2;
 
   const points = data
-    .map(element => {
+    .map((element) => {
       const x = (element.x / maximumXFromData) * chartWidth + padding;
       const y =
         chartHeight - (element.y / maximumYFromData) * chartHeight + padding;
@@ -37,8 +37,9 @@ const LineChart = ({
 
   const XAxis = () => (
     <Axis
-      points={`${padding},${height - padding} ${width - padding},${height -
-        padding}`}
+      points={`${padding},${height - padding} ${width - padding},${
+        height - padding
+      }`}
     />
   );
 
@@ -55,7 +56,7 @@ const LineChart = ({
     return new Array(guideCount).fill(0).map((_, index) => {
       const ratio = (index + 1) / guideCount;
 
-      const xCoordinate = padding + ratio * (width - padding * 2);
+      const xCoordinate = padding + chartWidth * ratio;
 
       return (
         <React.Fragment key={index}>
@@ -77,7 +78,7 @@ const LineChart = ({
     return new Array(numberOfHorizontalGuides).fill(0).map((_, index) => {
       const ratio = (index + 1) / numberOfHorizontalGuides;
 
-      const yCoordinate = chartHeight - chartHeight * ratio + padding;
+      const yCoordinate = padding + (chartHeight - chartHeight * ratio);
 
       return (
         <React.Fragment key={index}>
@@ -94,10 +95,9 @@ const LineChart = ({
 
   const LabelsXAxis = () => {
     const y = height - padding + FONT_SIZE * 2;
-
     return data.map((element, index) => {
-      const x =
-        (element.x / maximumXFromData) * chartWidth + padding - FONT_SIZE / 2;
+      const ratio = element.x / maximumXFromData;
+      const x = ratio * chartWidth + padding - FONT_SIZE;
       return (
         <text
           key={index}
@@ -106,7 +106,7 @@ const LineChart = ({
           style={{
             fill: "#808080",
             fontSize: FONT_SIZE,
-            fontFamily: "Helvetica"
+            fontFamily: "Helvetica",
           }}
         >
           {element.label}
@@ -122,7 +122,7 @@ const LineChart = ({
       const ratio = index / numberOfHorizontalGuides;
 
       const yCoordinate =
-        chartHeight - chartHeight * ratio + padding + FONT_SIZE / 2;
+        chartHeight - ratio * chartHeight + padding + FONT_SIZE / 2;
       return (
         <text
           key={index}
@@ -131,7 +131,7 @@ const LineChart = ({
           style={{
             fill: "#808080",
             fontSize: FONT_SIZE,
-            fontFamily: "Helvetica"
+            fontFamily: "Helvetica",
           }}
         >
           {parseFloat(maximumYFromData * (index / PARTS)).toFixed(precision)}
@@ -167,21 +167,21 @@ LineChart.defaultProps = {
   width: 500,
   horizontalGuides: 4,
   verticalGuides: null,
-  precision: 2
+  precision: 2,
 };
 
 LineChart.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
       value: PropTypes.number,
-      label: PropTypes.string
+      label: PropTypes.string,
     })
   ).isRequired,
   height: PropTypes.number,
   width: PropTypes.number,
   horizontalGuides: PropTypes.number,
   verticalGuides: PropTypes.number,
-  precision: PropTypes.number
+  precision: PropTypes.number,
 };
 
 export default LineChart;
